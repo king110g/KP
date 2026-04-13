@@ -1,0 +1,193 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+
+#define MAX 100
+
+int n;
+int bit[MAX];   // Bit vector
+
+struct file {
+    char name[20];
+    int start;
+    int length;
+    int blocks[MAX];
+} dir[MAX];
+
+int fileCount = 0;
+
+// Initialize disk randomly
+void init() {
+    srand(time(0));
+    for(int i = 0; i < n; i++) {
+        bit[i] = rand() % 2;
+    }
+}
+
+// Show Bit Vector
+void showBitVector() {
+    printf("\nBit Vector:\n");
+    for(int i = 0; i < n; i++) {
+        printf("%d ", bit[i]);
+    }
+    printf("\n");
+}
+
+// Create New File (Linked Allocation)
+void createFile() {
+    char name[20];
+    int length;
+
+    printf("\nEnter file name: ");
+    scanf("%s", name);
+
+    printf("Enter number of blocks required: ");
+    scanf("%d", &length);
+
+    int freeBlocks[MAX], count = 0;
+
+    // Find free blocks
+    for(int i = 0; i < n; i++) {
+        if(bit[i] == 0) {
+            freeBlocks[count++] = i;
+        }
+    }
+
+    if(count < length) {
+        printf("Not enough free space!\n");
+        return;
+    }
+
+    // Allocate blocks
+    strcpy(dir[fileCount].name, name);
+    dir[fileCount].length = length;
+
+    printf("Allocated blocks: ");
+
+    for(int i = 0; i < length; i++) {
+        int index = rand() % count;
+        int block = freeBlocks[index];
+
+        dir[fileCount].blocks[i] = block;
+        bit[block] = 1;
+
+        printf("%d -> ", block);
+
+        // remove used block
+        freeBlocks[index] = freeBlocks[count - 1];
+        count--;
+    }
+
+    printf("NULL\n");
+
+    dir[fileCount].start = dir[fileCount].blocks[0];
+    fileCount++;
+}
+
+// Show Directory
+void showDirectory() {
+    printf("\nDirectory:\n");
+
+    for(int i = 0; i < fileCount; i++) {
+        printf("File: %s\n", dir[i].name);
+        printf("Start Block: %d\n", dir[i].start);
+        printf("Blocks: ");
+
+        for(int j = 0; j < dir[i].length; j++) {
+            printf("%d -> ", dir[i].blocks[j]);
+        }
+        printf("NULL\n\n");
+    }
+}
+
+// Main Menu
+int main() {
+    int choice;
+
+    printf("Enter number of disk blocks: ");
+    scanf("%d", &n);
+
+    init();
+
+    do {
+        printf("\n--- MENU ---\n");
+        printf("1. Show Bit Vector\n");
+        printf("2. Create New File\n");
+        printf("3. Show Directory\n");
+        printf("4. Exit\n");
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch(choice) {
+            case 1: showBitVector(); break;
+            case 2: createFile(); break;
+            case 3: showDirectory(); break;
+            case 4: break;
+            default: printf("Invalid choice!\n");
+        }
+    } while(choice != 4);
+
+    return 0;
+}
+
+
+Question 2 
+
+#include <stdio.h>
+#include <stdlib.h>
+
+void sort(int arr[], int n) {
+    for(int i = 0; i < n - 1; i++) {
+        for(int j = 0; j < n - i - 1; j++) {
+            if(arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    int req[] = {80, 150, 60, 135, 40, 35, 170};
+    int n = 7;
+
+    int head = 70;
+    int disk_size = 200;  // assume
+    int total_movement = 0;
+
+    sort(req, n);
+
+    printf("Request Order: ");
+
+    // Move right side
+    for(int i = 0; i < n; i++) {
+        if(req[i] >= head) {
+            printf("%d ", req[i]);
+            total_movement += abs(head - req[i]);
+            head = req[i];
+        }
+    }
+
+    // Go to end
+    total_movement += abs(head - (disk_size - 1));
+    head = disk_size - 1;
+
+    // Jump to start
+    total_movement += abs(head - 0);
+    head = 0;
+
+    // Serve remaining (left side)
+    for(int i = 0; i < n; i++) {
+        if(req[i] < 70) {
+            printf("%d ", req[i]);
+            total_movement += abs(head - req[i]);
+            head = req[i];
+        }
+    }
+
+    printf("\nTotal Head Movement = %d\n", total_movement);
+
+    return 0;
+}
