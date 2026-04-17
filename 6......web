@@ -80,3 +80,12 @@ output.   Dataset Preview:
 2  Milk  Bread    NaN
 3  Milk Butter    NaN
 4 Bread    NaN    NaN
+
+support        itemsets
+0  0.83           (Bread)
+1  0.66           (Butter)
+2  0.66           (Milk)
+3  0.50           (Bread, Butter)
+4  0.50           (Bread, Milk)
+5  0.33           (Butter, Milk)
+6  0.33           (Bread, Butter, Milk)
