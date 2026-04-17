@@ -1,0 +1,82 @@
+<?php
+
+$cookie_name = "page_count";
+
+
+if(isset($_COOKIE[$cookie_name])) {
+    
+    $count = $_COOKIE[$cookie_name] + 1;
+} else {
+    
+    $count = 1;
+}
+
+
+setcookie($cookie_name, $count, time() + 86400, "/");
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Page Counter</title>
+</head>
+<body>
+
+<h2>Page Access Counter</h2>
+
+<?php
+echo "<p>You have visited this page <b>$count</b> times.</p>";
+?>
+
+</body>
+</html>
+
+
+
+
+2nd 
+import pandas as pd
+from mlxtend.preprocessing import TransactionEncoder
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Step 1: Load Dataset
+# (Example: CSV file where each row contains items separated by comma)
+data = pd.read_csv("market_basket.csv", header=None)
+
+# Step 2: Display Dataset Information
+print("Dataset Preview:\n", data.head())
+print("\nDataset Info:")
+print(data.info())
+
+# Step 3: Preprocessing (Drop Null Values)
+data = data.dropna()
+
+# Convert rows into list of transactions
+transactions = []
+for i in range(len(data)):
+    transactions.append([str(data.values[i, j]) for j in range(len(data.columns)) if str(data.values[i, j]) != 'nan'])
+
+# Step 4: Convert Categorical Data to Numeric (One-Hot Encoding)
+te = TransactionEncoder()
+te_data = te.fit(transactions).transform(transactions)
+df = pd.DataFrame(te_data, columns=te.columns_)
+
+print("\nEncoded Data:\n", df.head())
+
+# Step 5: Apply Apriori Algorithm
+frequent_itemsets = apriori(df, min_support=0.02, use_colnames=True)
+
+print("\nFrequent Itemsets:\n", frequent_itemsets)
+
+# Step 6: Generate Association Rules
+rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+
+print("\nAssociation Rules:\n", rules)
+
+output.   Dataset Preview:
+      0      1       2
+0  Milk  Bread  Butter
+1 Bread Butter    NaN
+2  Milk  Bread    NaN
+3  Milk Butter    NaN
+4 Bread    NaN    NaN
