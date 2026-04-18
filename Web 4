@@ -1,0 +1,107 @@
+1)	Write a PHP script to change the preference of your webpage like font style, font, size, font color, background color using cookie.
+Display selected settings on next page and actual implementation (with new setting) on third page.. 1) PHP Program (Using Cookies for Preferences)
+page1.php
+PHP
+<html>
+<body>
+<form action="page2.php" method="post">
+Font Style: <input type="text" name="style"><br>
+Font Size: <input type="text" name="size"><br>
+Font Color: <input type="text" name="color"><br>
+Background Color: <input type="text" name="bg"><br>
+<input type="submit" value="Save">
+</form>
+</body>
+</html>
+page2.php
+PHP
+<?php
+setcookie("style", $_POST['style'], time()+3600);
+setcookie("size", $_POST['size'], time()+3600);
+setcookie("color", $_POST['color'], time()+3600);
+setcookie("bg", $_POST['bg'], time()+3600);
+?>
+<html>
+<body>
+<a href="page3.php">Go to Page 3</a>
+</body>
+</html>
+page3.php
+PHP
+<html>
+<body style="background-color:<?php echo $_COOKIE['bg']; ?>;">
+<p style="font-family:<?php echo $_COOKIE['style']; ?>;
+font-size:<?php echo $_COOKIE['size']; ?>;
+color:<?php echo $_COOKIE['color']; ?>;">
+This is applied settings
+</p>
+</body>
+</html>
+2) Create the following data set in python
+2) Python Program (Apriori Algorithm)
+Python
+from itertools import combinations
+data = [
+    ['Apple','Grapes','Mangoes'],
+    ['Mangoes','Grapes','Apple'],
+    ['Bananas','Apple']
+]
+items = sorted(set(i for row in data for i in row))
+def support(itemset):
+    count = 0
+    for row in data:
+        if set(itemset).issubset(set(row)):
+            count += 1
+    return count
+min_sup = 1
+L1 = []
+for i in items:
+    if support([i]) >= min_sup:
+        L1.append([i])
+L2 = []
+for c in combinations(items,2):
+    if support(c) >= min_sup:
+        L2.append(list(c))
+L3 = []
+for c in combinations(items,3):
+    if support(c) >= min_sup:
+        L3.append(list(c))
+print("Frequent Itemsets:")
+print(L1)
+print(L2)
+print(L3)
+print("\nAssociation Rules:")
+for itemset in L2+L3:
+    for i in range(1,len(itemset)):
+        for a in combinations(itemset,i):
+            b = set(itemset) - set(a)
+            conf = support(itemset)/support(a)
+            print(set(a),"->",b,"Confidence:",conf)
+3) JavaScript Validation Program
+HTML
+<html>
+<body>
+<form onsubmit="return validate()">
+Username: <input type="text" id="u"><br>
+Password: <input type="password" id="p"><br>
+<input type="submit">
+</form>
+<script>
+function validate()
+{
+    var u=document.getElementById("u").value;
+    var p=document.getElementById("p").value;
+    if(u=="" || p=="")
+    {
+        alert("All fields required");
+        return false;
+    }
+    if(p.length<6)
+    {
+        alert("Password must be at least 6 characters");
+        return false;
+    }
+    return true;
+}
+</script>
+</body> </html>
